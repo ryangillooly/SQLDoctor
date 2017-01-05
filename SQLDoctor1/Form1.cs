@@ -46,11 +46,13 @@ namespace SQLDoctor1
                 Try 
                 {
                     Set-Location SQLServer:\\SQL\\$server -ErrorAction Stop; 
-                    Get-ChildItem | Select-Object -ExpandProperty Name;
+                    $getInstances = Get-ChildItem | Select-Object -ExpandProperty Name;
+                    $getInstances
                 } 
                 Catch 
                 {
-                    echo 'No SQL Server Instances'; 
+                    $outputString = 'No SQL Server Instances on ' + $server;
+                    echo $outputString;
                 }
                 ";
 
