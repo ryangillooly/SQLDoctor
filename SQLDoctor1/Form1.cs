@@ -51,7 +51,6 @@ namespace SQLDoctor1
                 Catch 
                 {
                     echo 'No SQL Server Instances'; 
-                    echo $?;
                 }
                 ";
 
