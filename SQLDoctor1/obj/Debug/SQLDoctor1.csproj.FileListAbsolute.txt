@@ -1,0 +1,10 @@
+\\RGCLOUD\ryan\TechData\SQLDoctor1\SQLDoctor1\bin\Debug\SQLDoctor1.exe.config
+\\RGCLOUD\ryan\TechData\SQLDoctor1\SQLDoctor1\bin\Debug\SQLDoctor1.exe
+\\RGCLOUD\ryan\TechData\SQLDoctor1\SQLDoctor1\bin\Debug\SQLDoctor1.pdb
+\\RGCLOUD\ryan\TechData\SQLDoctor1\SQLDoctor1\obj\Debug\SQLDoctor1.csprojResolveAssemblyReference.cache
+\\RGCLOUD\ryan\TechData\SQLDoctor1\SQLDoctor1\obj\Debug\SQLDoctor1.Form1.resources
+\\RGCLOUD\ryan\TechData\SQLDoctor1\SQLDoctor1\obj\Debug\SQLDoctor1.Properties.Resources.resources
+\\RGCLOUD\ryan\TechData\SQLDoctor1\SQLDoctor1\obj\Debug\SQLDoctor1.csproj.GenerateResource.Cache
+\\RGCLOUD\ryan\TechData\SQLDoctor1\SQLDoctor1\obj\Debug\SQLDoctor1.exe
+\\RGCLOUD\ryan\TechData\SQLDoctor1\SQLDoctor1\obj\Debug\SQLDoctor1.pdb
+\\RGCLOUD\ryan\TechData\SQLDoctor1\SQLDoctor1\bin\Debug\System.Management.Automation.dll
