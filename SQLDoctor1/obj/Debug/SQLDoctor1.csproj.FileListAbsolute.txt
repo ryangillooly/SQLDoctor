@@ -8,3 +8,13 @@
 \\RGCLOUD\ryan\TechData\SQLDoctor1\SQLDoctor1\obj\Debug\SQLDoctor1.exe
 \\RGCLOUD\ryan\TechData\SQLDoctor1\SQLDoctor1\obj\Debug\SQLDoctor1.pdb
 \\RGCLOUD\ryan\TechData\SQLDoctor1\SQLDoctor1\bin\Debug\System.Management.Automation.dll
+C:\Users\Ryan\Source\Repos\SQLDoctor\SQLDoctor1\bin\Debug\SQLDoctor1.exe.config
+C:\Users\Ryan\Source\Repos\SQLDoctor\SQLDoctor1\obj\Debug\SQLDoctor1.exe
+C:\Users\Ryan\Source\Repos\SQLDoctor\SQLDoctor1\obj\Debug\SQLDoctor1.pdb
+C:\Users\Ryan\Source\Repos\SQLDoctor\SQLDoctor1\bin\Debug\SQLDoctor1.exe
+C:\Users\Ryan\Source\Repos\SQLDoctor\SQLDoctor1\bin\Debug\SQLDoctor1.pdb
+C:\Users\Ryan\Source\Repos\SQLDoctor\SQLDoctor1\bin\Debug\System.Management.Automation.dll
+C:\Users\Ryan\Source\Repos\SQLDoctor\SQLDoctor1\obj\Debug\SQLDoctor1.csprojResolveAssemblyReference.cache
+C:\Users\Ryan\Source\Repos\SQLDoctor\SQLDoctor1\obj\Debug\SQLDoctor1.Form1.resources
+C:\Users\Ryan\Source\Repos\SQLDoctor\SQLDoctor1\obj\Debug\SQLDoctor1.Properties.Resources.resources
+C:\Users\Ryan\Source\Repos\SQLDoctor\SQLDoctor1\obj\Debug\SQLDoctor1.csproj.GenerateResource.Cache

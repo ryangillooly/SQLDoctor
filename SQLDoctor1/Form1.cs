@@ -29,25 +29,20 @@ namespace SQLDoctor1
         }
         private void button1_Click(object sender, EventArgs e)
         {
-            //If the logPath exists, delete the file
-            string logPath = "\\\\RGCloud\\Ryan\\TechData\\SQLDoctor1\\Output.Log";
-            if (File.Exists(logPath))
-            {
-                File.Delete(logPath);
-            }
+            //string logPath = "\\\\RGCloud\\Ryan\\TechData\\SQLDoctor1\\Output.Log";
+            //if (File.Exists(logPath))
+            //{
+            //    File.Delete(logPath);
+            //}
 
-            //Delimiter to split items in the Server List Input Box
             string[] Servers = richTextBox1.Text.Split('\n');
-
-            //Pass each server name from the server list to the 'Server' variable
             foreach (string Server in Servers)
             {
-                //PowerShell Script
-                string PSScript1 = @"
+                string PSScript = @"
                 param([Parameter(Mandatory = $true, ValueFromPipeline = $true)][string] $server)
 
                 Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned -Force;
-                Import-Module SQLServer;
+                Import-Module SQLPS;
                 Try 
                 {
                     Set-Location SQLServer:\\SQL\\$server -ErrorAction Stop; 
@@ -60,50 +55,26 @@ namespace SQLDoctor1
                 }
                 ";
 
-                string PSScript = @"
-                param([Parameter(Mandatory = $true, ValueFromPipeline = $true)][string] $server)
-                Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned -Force;
-                Import-Module SQLServer;
-                Try 
+                using (PowerShell psInstance = PowerShell.Create())
                 {
-                    Set-Location SQLServer:\\SQL\\"+Server+@" -ErrorAction Stop; 
-                    Get-ChildItem | Select-Object -ExpandProperty Name;
-                } 
-                Catch 
-                {
-                    echo 'No SQL Server Instances'; 
-                    echo $?;
+                    psInstance.AddScript(PSScript);
+                    psInstance.AddParameter("server", Server);
+                    Collection<PSObject> results = psInstance.Invoke();
+                    
+                    if (psInstance.Streams.Error.Count > 0)
+                    {
+                        foreach (var errorRecord in psInstance.Streams.Error)
+                        {
+                            MessageBox.Show(errorRecord.ToString());
+                        }
+                    }
+
+                    foreach (PSObject result in results)
+                    {
+                        //File.AppendAllText(logpath, result + Environment.NewLine);
+                        listBox1.Items.Add(result);
+                    }
                 }
-                ";
-
-                //Create PowerShell Instance
-                PowerShell psInstance = PowerShell.Create();
-
-                //Add PowerShell Script
-                psInstance.AddCommand(PSScript);
-
-                //Pass the Server variable in to the $server parameter within the PS script
-                psInstance.AddParameter("server", Server);
-
-                //Execute Script
-                Collection<PSObject> results = new Collection<PSObject>();
-                try
-                {
-                    results = psInstance.Invoke();
-                }
-                catch (Exception ex)
-                {
-                    results.Add(new PSObject((Object)ex.Message));
-                }
-
-                //Loop through each of the results in the PowerShell window
-                foreach (PSObject result in results)
-                {
-                   //File.AppendAllText(logPath, result + Environment.NewLine);
-                    listBox1.Items.Add(result);
-                }
-
-                psInstance.Dispose();
             }
         }
         private void button2_Click(object sender, EventArgs e)
