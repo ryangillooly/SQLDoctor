@@ -21,6 +21,7 @@ namespace SQLDoctor1
         {
             InitializeComponent();
         }
+
         private void Form1_Load(object sender, EventArgs e)
         {
         }
@@ -41,6 +42,13 @@ namespace SQLDoctor1
                 if (String.IsNullOrEmpty(Server))
                 {
                     break;
+                }
+
+                if (Server.Any(Char.IsWhiteSpace))
+                {
+                    Server.Trim();
+                    //listBox2.Items.Add(Server);
+                    //break;
                 }
 
                 string PSScript = @"
