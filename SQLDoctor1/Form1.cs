@@ -29,11 +29,11 @@ namespace SQLDoctor1
         }
         private void button1_Click(object sender, EventArgs e)
         {
-            //string logPath = "\\\\localhost\\Output.Log";
-            //if (File.Exists(logPath))
-            //{
-            //    File.Delete(logPath);
-            //}
+            string logPath = "\\\\localhost\\Output.Log";
+            if (File.Exists(logPath))
+            {
+                File.Delete(logPath);
+            }
 
             string[] Servers = richTextBox1.Text.Split('\n');
             foreach (string Server in Servers)
@@ -46,8 +46,7 @@ namespace SQLDoctor1
                 Try 
                 {
                     Set-Location SQLServer:\\SQL\\$server -ErrorAction Stop -WarningAction SilentlyContinue; 
-                    $getInstances = Get-ChildItem | Select-Object -ExpandProperty Name;
-                    $getInstances
+                    Get-ChildItem | Select-Object -ExpandProperty Name;
                 } 
                 Catch 
                 {
@@ -56,21 +55,37 @@ namespace SQLDoctor1
                 }
                 ";
 
+                string PSScript1 = @"
+
+Param([Parameter(Mandatory = $true, ValueFromPipeline = $true)][string] $server)
+
+                $localInstances = @()
+                [array]$captions = GWMI Win32_Service -ComputerName $server | ?{$_.Name -match 'mssql * ' -and $_.PathName -match 'sqlservr.exe'} | %{$_.Caption}
+
+                ForEach($caption in $captions)
+                {
+                    if ($caption -eq 'MSSQLSERVER') 
+                    {
+                        $localInstances += 'MSSQLSERVER'
+                    }    
+                    else 
+                    {
+                        $temp = $caption | %{$_.split(' ')[-1]} | %{$_.trimStart('(')} | %{$_.trimEnd(')')}
+                        $localInstances += '$server\$temp'
+                    }
+                }
+                $localInstances;";
+
+
+      
+
                 using (PowerShell psInstance = PowerShell.Create())
                 {
                     psInstance.AddScript(PSScript);
                     psInstance.AddParameter("server", Server);
                     Collection<PSObject> results = psInstance.Invoke();
-                    
 
-                    //Warnings & Error displays
-                    if (psInstance.Streams.Warning.Any())
-                    {
-                        foreach (var warningRecord in psInstance.Streams.Warning)
-                        {
-                            MessageBox.Show(warningRecord.ToString());
-                        }
-                    }
+                    //Error displays
                     if (psInstance.Streams.Error.Any())
                     {
                         foreach (var errorRecord in psInstance.Streams.Error)
@@ -79,12 +94,11 @@ namespace SQLDoctor1
                             
                         }
                     }
-
-
-
+                    
                     foreach (PSObject result in results)
                     {
                         //File.AppendAllText(logpath, result + Environment.NewLine);
+             
                         listBox1.Items.Add(result);
                     }
                 }
