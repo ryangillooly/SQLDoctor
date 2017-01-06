@@ -29,38 +29,25 @@ namespace SQLDoctor1
         }
         private void button1_Click(object sender, EventArgs e)
         {
-            string logPath = "\\\\localhost\\Output.Log";
-            if (File.Exists(logPath))
-            {
-                File.Delete(logPath);
-            }
+            //string logPath = "\\\\localhost\\Output.Log";
+            //if (File.Exists(logPath))
+            //{
+            //    File.Delete(logPath);
+            //}
 
             string[] Servers = richTextBox1.Text.Split('\n');
             foreach (string Server in Servers)
             {
-                string PSScript = @"
-                param([Parameter(Mandatory = $true, ValueFromPipeline = $true)][string] $server)
-
-                Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned -Force;
-                Import-Module SQLPS -WarningAction SilentlyContinue;
-                Try 
+                if (String.IsNullOrEmpty(Server))
                 {
-                    Set-Location SQLServer:\\SQL\\$server -ErrorAction Stop -WarningAction SilentlyContinue; 
-                    Get-ChildItem | Select-Object -ExpandProperty Name;
-                } 
-                Catch 
-                {
-                    $outputString = 'No SQL Server Instances on ' + $server;
-                    echo $outputString;
+                    break;
                 }
-                ";
 
-                string PSScript1 = @"
-
-Param([Parameter(Mandatory = $true, ValueFromPipeline = $true)][string] $server)
+                string PSScript = @"
+                Param([Parameter(Mandatory = $true, ValueFromPipeline = $true)][string] $server)
 
                 $localInstances = @()
-                [array]$captions = GWMI Win32_Service -ComputerName $server | ?{$_.Name -match 'mssql * ' -and $_.PathName -match 'sqlservr.exe'} | %{$_.Caption}
+                [array]$captions = GWMI Win32_Service -ComputerName $server | ?{$_.Name -match 'mssql *' -and $_.PathName -match 'sqlservr.exe'} | %{$_.Caption}
 
                 ForEach($caption in $captions)
                 {
@@ -71,14 +58,12 @@ Param([Parameter(Mandatory = $true, ValueFromPipeline = $true)][string] $server)
                     else 
                     {
                         $temp = $caption | %{$_.split(' ')[-1]} | %{$_.trimStart('(')} | %{$_.trimEnd(')')}
-                        $localInstances += '$server\$temp'
+                        $localInstances += ""$server\$temp""
                     }
                 }
-                $localInstances;";
-
-
-      
-
+                $localInstances;
+                ";
+                
                 using (PowerShell psInstance = PowerShell.Create())
                 {
                     psInstance.AddScript(PSScript);
@@ -98,7 +83,6 @@ Param([Parameter(Mandatory = $true, ValueFromPipeline = $true)][string] $server)
                     foreach (PSObject result in results)
                     {
                         //File.AppendAllText(logpath, result + Environment.NewLine);
-             
                         listBox1.Items.Add(result);
                     }
                 }
