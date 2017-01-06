@@ -29,7 +29,7 @@ namespace SQLDoctor1
         }
         private void button1_Click(object sender, EventArgs e)
         {
-            //string logPath = "\\\\RGCloud\\Ryan\\TechData\\SQLDoctor1\\Output.Log";
+            //string logPath = "\\\\localhost\\Output.Log";
             //if (File.Exists(logPath))
             //{
             //    File.Delete(logPath);
@@ -42,10 +42,10 @@ namespace SQLDoctor1
                 param([Parameter(Mandatory = $true, ValueFromPipeline = $true)][string] $server)
 
                 Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned -Force;
-                Import-Module SQLPS;
+                Import-Module SQLPS -WarningAction SilentlyContinue;
                 Try 
                 {
-                    Set-Location SQLServer:\\SQL\\$server -ErrorAction Stop; 
+                    Set-Location SQLServer:\\SQL\\$server -ErrorAction Stop -WarningAction SilentlyContinue; 
                     $getInstances = Get-ChildItem | Select-Object -ExpandProperty Name;
                     $getInstances
                 } 
@@ -62,13 +62,25 @@ namespace SQLDoctor1
                     psInstance.AddParameter("server", Server);
                     Collection<PSObject> results = psInstance.Invoke();
                     
-                    if (psInstance.Streams.Error.Count > 0)
+
+                    //Warnings & Error displays
+                    if (psInstance.Streams.Warning.Any())
+                    {
+                        foreach (var warningRecord in psInstance.Streams.Warning)
+                        {
+                            MessageBox.Show(warningRecord.ToString());
+                        }
+                    }
+                    if (psInstance.Streams.Error.Any())
                     {
                         foreach (var errorRecord in psInstance.Streams.Error)
                         {
                             MessageBox.Show(errorRecord.ToString());
+                            
                         }
                     }
+
+
 
                     foreach (PSObject result in results)
                     {
