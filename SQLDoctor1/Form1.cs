@@ -41,7 +41,7 @@ namespace SQLDoctor1
             {
                 if (String.IsNullOrEmpty(Server))
                 {
-                    break;
+                    continue;
                 }
 
                 string PSScript = @"
@@ -104,10 +104,12 @@ namespace SQLDoctor1
                     foreach (PSObject result in results)
                     {
                         //File.AppendAllText(logpath, result + Environment.NewLine);
-                        listBox1.Items.Add(result);
+                        listBox3.Items.Add(result);
                     }
                 }
             }
+
+            tabControl1.SelectedIndex = 1;
         }
         private void button2_Click(object sender, EventArgs e)
         {
