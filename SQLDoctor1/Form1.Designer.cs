@@ -34,6 +34,8 @@
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.listBox3 = new System.Windows.Forms.ListBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.sqlVersionButton = new System.Windows.Forms.CheckBox();
+            this.fullHealthCheckButton = new System.Windows.Forms.CheckBox();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.listBox4 = new System.Windows.Forms.ListBox();
             this.button1 = new System.Windows.Forms.Button();
@@ -44,6 +46,7 @@
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
+            this.tabPage3.SuspendLayout();
             this.tabPage4.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -53,7 +56,7 @@
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Controls.Add(this.tabPage4);
-            this.tabControl1.Location = new System.Drawing.Point(16, 22);
+            this.tabControl1.Location = new System.Drawing.Point(12, 22);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(304, 278);
@@ -65,18 +68,25 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(296, 403);
+            this.tabPage1.Size = new System.Drawing.Size(296, 252);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Servers";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
             // richTextBox1
             // 
+            this.richTextBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.richTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.richTextBox1.DetectUrls = false;
+            this.richTextBox1.EnableAutoDragDrop = true;
+            this.richTextBox1.ForeColor = System.Drawing.SystemColors.MenuText;
             this.richTextBox1.Location = new System.Drawing.Point(0, 0);
             this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(296, 403);
+            this.richTextBox1.Size = new System.Drawing.Size(296, 252);
             this.richTextBox1.TabIndex = 0;
-            this.richTextBox1.Text = "";
+            this.richTextBox1.Text = "localhost\nHomePC\\SQL01";
             this.richTextBox1.TextChanged += new System.EventHandler(this.richTextBox1_TextChanged);
             // 
             // tabPage2
@@ -92,22 +102,46 @@
             // 
             // listBox3
             // 
+            this.listBox3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listBox3.FormattingEnabled = true;
-            this.listBox3.Location = new System.Drawing.Point(0, 0);
+            this.listBox3.Location = new System.Drawing.Point(3, 3);
             this.listBox3.Name = "listBox3";
-            this.listBox3.Size = new System.Drawing.Size(296, 407);
+            this.listBox3.Size = new System.Drawing.Size(290, 246);
             this.listBox3.TabIndex = 0;
             this.listBox3.SelectedIndexChanged += new System.EventHandler(this.listBox3_SelectedIndexChanged);
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.sqlVersionButton);
+            this.tabPage3.Controls.Add(this.fullHealthCheckButton);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(296, 403);
+            this.tabPage3.Size = new System.Drawing.Size(296, 252);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Checks";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // sqlVersionButton
+            // 
+            this.sqlVersionButton.AutoSize = true;
+            this.sqlVersionButton.Location = new System.Drawing.Point(6, 29);
+            this.sqlVersionButton.Name = "sqlVersionButton";
+            this.sqlVersionButton.Size = new System.Drawing.Size(119, 17);
+            this.sqlVersionButton.TabIndex = 1;
+            this.sqlVersionButton.Text = "SQL Server Version";
+            this.sqlVersionButton.UseVisualStyleBackColor = true;
+            // 
+            // fullHealthCheckButton
+            // 
+            this.fullHealthCheckButton.AutoSize = true;
+            this.fullHealthCheckButton.Location = new System.Drawing.Point(6, 6);
+            this.fullHealthCheckButton.Name = "fullHealthCheckButton";
+            this.fullHealthCheckButton.Size = new System.Drawing.Size(131, 17);
+            this.fullHealthCheckButton.TabIndex = 0;
+            this.fullHealthCheckButton.Text = "Full SQL HealthCheck";
+            this.fullHealthCheckButton.UseVisualStyleBackColor = true;
+            this.fullHealthCheckButton.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
             // tabPage4
             // 
@@ -115,7 +149,7 @@
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(296, 403);
+            this.tabPage4.Size = new System.Drawing.Size(296, 252);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Results";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -196,6 +230,8 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
+            this.tabPage3.ResumeLayout(false);
+            this.tabPage3.PerformLayout();
             this.tabPage4.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -217,6 +253,8 @@
         private System.Windows.Forms.TabPage tabPage4;
         private System.Windows.Forms.ListBox listBox4;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.CheckBox fullHealthCheckButton;
+        private System.Windows.Forms.CheckBox sqlVersionButton;
     }
 }
 
