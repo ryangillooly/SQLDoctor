@@ -100,7 +100,7 @@ namespace SQLDoctor1
                             }
                         }
                     }
-                    
+
                     foreach (PSObject result in results)
                     {
                         //File.AppendAllText(logpath, result + Environment.NewLine);
@@ -109,7 +109,10 @@ namespace SQLDoctor1
                 }
             }
 
-            tabControl1.SelectedIndex = 1;
+            if (listBox3.Items.Count > 0)
+            {
+                tabControl1.SelectedIndex = 1;
+            }
         }
         private void button2_Click(object sender, EventArgs e)
         {
