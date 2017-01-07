@@ -44,18 +44,24 @@ namespace SQLDoctor1
                     break;
                 }
 
-                if (Server.Any(Char.IsWhiteSpace))
-                {
-                    Server.Trim();
-                    //listBox2.Items.Add(Server);
-                    //break;
-                }
-
                 string PSScript = @"
                 Param([Parameter(Mandatory = $true, ValueFromPipeline = $true)][string] $server)
 
-                $localInstances = @()
-                [array]$captions = GWMI Win32_Service -ComputerName $server | ?{$_.Name -match 'mssql *' -and $_.PathName -match 'sqlservr.exe'} | %{$_.Caption}
+                $localInstances = @();
+                $instName = ""MSSQL*"";
+                $hostName = $server;
+
+                if ($server -like '*\*')      #Host & SQLInstance
+                {
+                    $hostName = $server | %{$_.Split('\')[-2]}
+                    $instName = $server | %{$_.Split('\')[-1]}
+                    if ($instName -ne ""MSSQLSERVER"")
+                    {
+                        $instName = ""MSSQL*"" +$instName;
+                    }
+                }
+
+                [array]$captions = GWMI Win32_Service -ComputerName $hostName | ?{$_.Name -like $instName -and $_.PathName -match 'sqlservr.exe'} | %{$_.Caption}
 
                 ForEach($caption in $captions)
                 {
@@ -66,7 +72,7 @@ namespace SQLDoctor1
                     else 
                     {
                         $temp = $caption | %{$_.split(' ')[-1]} | %{$_.trimStart('(')} | %{$_.trimEnd(')')}
-                        $localInstances += ""$server\$temp""
+                        $localInstances += ""$hostName\$temp""
                     }
                 }
                 $localInstances;
@@ -75,16 +81,23 @@ namespace SQLDoctor1
                 using (PowerShell psInstance = PowerShell.Create())
                 {
                     psInstance.AddScript(PSScript);
-                    psInstance.AddParameter("server", Server);
+                    string Server1 = Server.Trim().ToString();
+                    psInstance.AddParameter("server", Server1);
                     Collection<PSObject> results = psInstance.Invoke();
 
                     //Error displays
                     if (psInstance.Streams.Error.Any())
-                    {
+                    {   
                         foreach (var errorRecord in psInstance.Streams.Error)
-                        {
-                            MessageBox.Show(errorRecord.ToString());
-                            
+                        {   //If the error contains an RPC error, input Server1 into the failed box or else Messagebox with error
+                            if (errorRecord.ToString().Contains("The RPC server is unavailable"))
+                            {
+                                listBox2.Items.Add(Server1);
+                            }
+                            else
+                            {
+                                MessageBox.Show(errorRecord.ToString());
+                            }
                         }
                     }
                     
