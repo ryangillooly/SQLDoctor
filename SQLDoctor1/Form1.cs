@@ -162,11 +162,8 @@ namespace SQLDoctor1
 
                         Import-Module SQLPS;
 
-                        $sqlVersionQuery = Invoke-Sqlcmd -ServerInstance ""$server"" -Username ""SQLDoctor"" -Password ""SQLDoc"" -Query ""SELECT @@VERSION""
-                        $sqlVersion = $sqlVersionQuery.Column1.ToString();
-
-                        #Thisremoves the first and last section, then removes the white space at the beginning
-                        $sqlVersion = (($sqlVersion.Split('-')[1]).Split('(')[0]).Split(' ')[1];  
+                        $sqlVersionQuery = Invoke-Sqlcmd -ServerInstance ""$server"" -Username ""SQLDoctor"" -Password ""SQLDoc"" -Query ""EXEC SQLDoctor.dba.sp_dba_GetServerVersion;""
+                        $sqlVersion = $sqlVersionQuery.ProductVersion.ToString();
                         $sqlVersion;
                         ";
 
