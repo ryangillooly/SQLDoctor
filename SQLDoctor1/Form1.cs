@@ -24,7 +24,7 @@ namespace SQLDoctor1
         private void Form1_Load(object sender, EventArgs e)
         {
         }
-//--------------------------------------- MAIN CODE ---------------------------------------------------------//
+//--------------------------------------- MAIN CODE ----------------------------------------------------------//
 
 
         private void button1_Click(object sender, EventArgs e)
