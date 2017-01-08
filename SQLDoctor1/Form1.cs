@@ -205,8 +205,16 @@ namespace SQLDoctor1
             //Clear all items from ListBox1
             listBox1.Items.Clear();
             listBox2.Items.Clear();
-            listBox3.Items.Clear();
-            SQLChecks("HomePC\\SQL01");
+            //listBox3.Items.Clear();
+
+            List<string> sqlInstances = listBox3.Items.Cast<char>().ToList<char>();
+
+
+            foreach (string sqlInstance in sqlInstances)
+            {
+            //    SQLChecks(sqlInstance);  
+                MessageBox.Show(sqlInstance);
+            }
         }
 
 

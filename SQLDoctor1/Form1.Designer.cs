@@ -34,6 +34,7 @@
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.listBox3 = new System.Windows.Forms.ListBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.sqlCheckedListBox = new System.Windows.Forms.CheckedListBox();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.listBox4 = new System.Windows.Forms.ListBox();
             this.button1 = new System.Windows.Forms.Button();
@@ -41,7 +42,6 @@
             this.button2 = new System.Windows.Forms.Button();
             this.listBox2 = new System.Windows.Forms.ListBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.sqlCheckedListBox = new System.Windows.Forms.CheckedListBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -85,7 +85,7 @@
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.Size = new System.Drawing.Size(296, 252);
             this.richTextBox1.TabIndex = 0;
-            this.richTextBox1.Text = "localhost\nHomePC\\SQL01";
+            this.richTextBox1.Text = "localhost";
             this.richTextBox1.TextChanged += new System.EventHandler(this.richTextBox1_TextChanged);
             // 
             // tabPage2
@@ -119,6 +119,18 @@
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Checks";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // sqlCheckedListBox
+            // 
+            this.sqlCheckedListBox.FormattingEnabled = true;
+            this.sqlCheckedListBox.Items.AddRange(new object[] {
+            "Full SQL Health Check",
+            "SQL Server Version Query"});
+            this.sqlCheckedListBox.Location = new System.Drawing.Point(0, 2);
+            this.sqlCheckedListBox.Name = "sqlCheckedListBox";
+            this.sqlCheckedListBox.Size = new System.Drawing.Size(296, 244);
+            this.sqlCheckedListBox.TabIndex = 0;
+            this.sqlCheckedListBox.SelectedIndexChanged += new System.EventHandler(this.sqlCheckedListBox_SelectedIndexChanged);
             // 
             // tabPage4
             // 
@@ -187,18 +199,6 @@
             this.label1.Size = new System.Drawing.Size(118, 17);
             this.label1.TabIndex = 8;
             this.label1.Text = "Failed to Connect";
-            // 
-            // sqlCheckedListBox
-            // 
-            this.sqlCheckedListBox.FormattingEnabled = true;
-            this.sqlCheckedListBox.Items.AddRange(new object[] {
-            "Full SQL Health Check",
-            "SQL Server Version Query"});
-            this.sqlCheckedListBox.Location = new System.Drawing.Point(0, 2);
-            this.sqlCheckedListBox.Name = "sqlCheckedListBox";
-            this.sqlCheckedListBox.Size = new System.Drawing.Size(296, 244);
-            this.sqlCheckedListBox.TabIndex = 0;
-            this.sqlCheckedListBox.SelectedIndexChanged += new System.EventHandler(this.sqlCheckedListBox_SelectedIndexChanged);
             // 
             // Form1
             // 
