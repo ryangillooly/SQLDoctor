@@ -24,16 +24,8 @@ namespace SQLDoctor1
         private void Form1_Load(object sender, EventArgs e)
         {
         }
+//--------------------------------------- MAIN CODE ---------------------------------------------------------//
 
-
-
-        private void SQLChecks(object sender, EventArgs e)
-        {
-            foreach (var instance in listBox3.Items)
-            {
-                string instName = instance.ToString();
-            }
-        }
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -136,7 +128,80 @@ namespace SQLDoctor1
                 {
                     tabControl1.SelectedIndex = 2;
                 }
+                private void SQLChecks(string Server)
+        {
+            using (PowerShell psInstance = PowerShell.Create())
+            {
+                //Declare variable strings outside of the IF blocks
+                string PS_sqlVersionScript = @"";
+                string PS_healthCheckScript = @"";
 
+                if ((sqlCheckedListBox.GetItemCheckState(0).ToString() == "Checked") || (sqlCheckedListBox.GetItemCheckState(1).ToString() == "Checked"))
+                {
+                    //--------------------------------------------------------------------------------------------------------
+                    if (sqlCheckedListBox.GetItemCheckState(0).ToString() == "Checked")
+                    {
+                        //begin work on Full SQL Health Check
+                        PS_healthCheckScript = @"
+                        Param([Parameter(Mandatory = $true, ValueFromPipeline = $true)][string] $server)
+
+                        Import-Module SQLPS;
+
+                        $Test = ""This is the health check...""
+                        $Test;
+                        ";
+
+                        psInstance.AddScript(PS_healthCheckScript);
+                    }
+                    //--------------------------------------------------------------------------------------------------------
+                    else if (sqlCheckedListBox.GetItemCheckState(1).ToString() == "Checked")
+                    {
+                        //begin work on SQL Versions Check
+                        PS_sqlVersionScript = @"
+                        Param([Parameter(Mandatory = $true, ValueFromPipeline = $true)][string] $server)
+
+                        Import-Module SQLPS;
+
+                        $sqlVersionQuery = Invoke-Sqlcmd -ServerInstance ""$server"" -Username ""SQLDoctor"" -Password ""SQLDoc"" -Query ""SELECT @@VERSION""
+                        $sqlVersion = $sqlVersionQuery.Column1.ToString();
+
+                        #Thisremoves the first and last section, then removes the white space at the beginning
+                        $sqlVersion = (($sqlVersion.Split('-')[1]).Split('(')[0]).Split(' ')[1];  
+                        $sqlVersion;
+                        ";
+
+                        psInstance.AddScript(PS_sqlVersionScript);
+                    }
+                    //--------------------------------------------------------------------------------------------------------
+                    psInstance.AddParameter("server", Server);
+                    Collection<PSObject> results = psInstance.Invoke();
+
+                    //Error displays
+                    if (psInstance.Streams.Error.Any())
+                    {
+                        foreach (var errorRecord in psInstance.Streams.Error)
+                        {
+                            {
+                                MessageBox.Show(errorRecord.ToString());
+                            }
+                        }
+                    }
+
+                    foreach (PSObject result in results)
+                    {
+                        if (result != null)
+                        {
+                            MessageBox.Show(result.ToString());
+                        }
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("No SQL Checks Selected. Please select Checks to be performed.");
+                }
+                //--------------------------------------------------------------------------------------------------------
+            }
+        }
 
         private void button2_Click(object sender, EventArgs e)
         {
@@ -144,11 +209,11 @@ namespace SQLDoctor1
             listBox1.Items.Clear();
             listBox2.Items.Clear();
             listBox3.Items.Clear();
+            SQLChecks("HomePC\\SQL01");
         }
 
 
-
-
+//--------------------------------------- MAIN CODE ---------------------------------------------------------//
         private void richTextBox1_TextChanged(object sender, EventArgs e)
         {
         }
@@ -164,7 +229,7 @@ namespace SQLDoctor1
         {
 
         }
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        private void sqlCheckedListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
 
         }
