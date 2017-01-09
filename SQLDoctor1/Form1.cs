@@ -29,14 +29,22 @@ namespace SQLDoctor1
 
         private void button1_Click(object sender, EventArgs e)
         {
-           if (button1.Text == "Parse Server Names")
-           {
+            if (tabControl1.SelectedIndex == 0)
+            {
                 parseServerNames_Button();
-           }
-           else if (button1.Text == "Move to SQL Checks")
-           {
+            }    
+            else if (tabControl1.SelectedIndex == 1)
+            {    
                 moveToSQLChecks_Button();
-           }
+            }
+            else if (tabControl1.SelectedIndex == 2)
+            {
+                MessageBox.Show("SQL Checks script executed...lel....");
+            }
+            else if (tabControl1.SelectedIndex == 3)
+            {
+                MessageBox.Show("Results script executed...hehehe");
+            }
         }
                 private void parseServerNames_Button()
                 {
@@ -111,7 +119,7 @@ namespace SQLDoctor1
                                 }
                             }
 
-                            foreach (PSObject result in results)
+                            foreach (var result in results)
                             {
                                 listBox3.Items.Add(result);
                             }
@@ -120,13 +128,14 @@ namespace SQLDoctor1
 
             if (listBox3.Items.Count > 0)
             {
-                tabControl1.SelectedIndex = 1;
+                tabControl1.SelectTab("Instances");
                 button1.Text = "Move to SQL Checks";
             }
         }
                 private void moveToSQLChecks_Button()
                 {
-                    tabControl1.SelectedIndex = 2;
+                    tabControl1.SelectTab("Checks");
+                    button1.Text = "Run SQL Doctor Checks";
                 }
                 private void SQLChecks(string Server)
         {
@@ -207,13 +216,10 @@ namespace SQLDoctor1
             listBox2.Items.Clear();
             //listBox3.Items.Clear();
 
-            List<string> sqlInstances = listBox3.Items.Cast<char>().ToList<char>();
-
-
-            foreach (string sqlInstance in sqlInstances)
+            var sqlInstances = listBox3.Items;
+            foreach (var sqlInstance in sqlInstances)
             {
-            //    SQLChecks(sqlInstance);  
-                MessageBox.Show(sqlInstance);
+                MessageBox.Show(sqlInstance.ToString());
             }
         }
 
