@@ -24,39 +24,20 @@ namespace SQLDoctor1
         private void Form1_Load(object sender, EventArgs e)
         {
         }
-//--------------------------------------- MAIN CODE ----------------------------------------------------------//
+        //--------------------------------------- MAIN CODE ----------------------------------------------------------//
 
 
-        private void button1_Click(object sender, EventArgs e)
+        private void parseServerNames_Button_Click(object sender, EventArgs e)
         {
-            if (tabControl1.SelectedIndex == 0)
+            string[] Servers = serverNameList.Text.Split('\n');
+            foreach (string Server in Servers)
             {
-                parseServerNames_Button();
-            }    
-            else if (tabControl1.SelectedIndex == 1)
-            {    
-                moveToSQLChecks_Button();
-            }
-            else if (tabControl1.SelectedIndex == 2)
-            {
-                MessageBox.Show("SQL Checks script executed...lel....");
-            }
-            else if (tabControl1.SelectedIndex == 3)
-            {
-                MessageBox.Show("Results script executed...hehehe");
-            }
-        }
-                private void parseServerNames_Button()
+                if (String.IsNullOrEmpty(Server))
                 {
-                    string[] Servers = richTextBox1.Text.Split('\n');
-                    foreach (string Server in Servers)
-                    {
-                        if (String.IsNullOrEmpty(Server))
-                        {
-                            continue;
-                        }
+                    continue;
+                }
 
-                        string PSScript = @"
+                string PSScript = @"
                         Param([Parameter(Mandatory = $true, ValueFromPipeline = $true)][string] $server)
 
                         $localInstances = @();
@@ -90,65 +71,73 @@ namespace SQLDoctor1
                         $localInstances;
                         ";
 
-                        using (PowerShell psInstance = PowerShell.Create())
-                        {
-                            psInstance.AddScript(PSScript);
-                            string Server1 = Server.Trim().ToString();
-                            
-                            if (Server1 == "localhost")
+                using (PowerShell psInstance = PowerShell.Create())
+                {
+                    psInstance.AddScript(PSScript);
+                    string Server1 = Server.Trim().ToString();
+
+                    if (Server1 == "localhost")
+                    {
+                        Server1 = System.Environment.MachineName;
+                    }
+
+                    psInstance.AddParameter("server", Server1);
+                    Collection<PSObject> results = psInstance.Invoke();
+
+                    //Error displays
+                    if (psInstance.Streams.Error.Any())
+                    {
+                        foreach (var errorRecord in psInstance.Streams.Error)
+                        {   //If the error contains an RPC error, input Server1 into the failed box or else Messagebox with error
+                            if (errorRecord.ToString().Contains("The RPC server is unavailable"))
                             {
-                                Server1 = System.Environment.MachineName;
+                                unvalSQLInst_ListBox.Items.Add(Server1);
                             }
-
-                            psInstance.AddParameter("server", Server1);
-                            Collection<PSObject> results = psInstance.Invoke();
-
-                            //Error displays
-                            if (psInstance.Streams.Error.Any())
+                            else
                             {
-                                foreach (var errorRecord in psInstance.Streams.Error)
-                                {   //If the error contains an RPC error, input Server1 into the failed box or else Messagebox with error
-                                    if (errorRecord.ToString().Contains("The RPC server is unavailable"))
-                                    {
-                                        listBox2.Items.Add(Server1);
-                                    }
-                                    else
-                                    {
-                                        MessageBox.Show(errorRecord.ToString());
-                                    }
-                                }
-                            }
-
-                            foreach (var result in results)
-                            {
-                                listBox3.Items.Add(result);
+                                MessageBox.Show(errorRecord.ToString());
                             }
                         }
                     }
 
-            if (listBox3.Items.Count > 0)
+                    foreach (var result in results)
+                    {
+                        valSQLInst_ListBox.Items.Add(result);
+                    }
+                }
+            }
+
+            tabControl1.SelectTab("Instances");
+        }
+
+        private void moveToSQLChecks_Button_Click(object sender, EventArgs e)
+        {
+            tabControl1.SelectTab("Checks");
+        }
+
+        private void runSQLChecks_Button_Click(object sender, EventArgs e)
+        {
+            foreach (object Server in valSQLInst_ListBox.Items)
             {
-                tabControl1.SelectTab("Instances");
-                button1.Text = "Move to SQL Checks";
+                sqlChecks(Server.ToString());
             }
         }
-                private void moveToSQLChecks_Button()
-                {
-                    tabControl1.SelectTab("Checks");
-                    button1.Text = "Run SQL Doctor Checks";
-                }
-                private void SQLChecks(string Server)
+
+
+        private void sqlChecks(string Server)
         {
+            string getSQLVersion = "SELECT @@VERSION;";
+
             using (PowerShell psInstance = PowerShell.Create())
             {
                 //Declare variable strings outside of the IF blocks
                 string PS_sqlVersionScript = @"";
                 string PS_healthCheckScript = @"";
 
-                if ((sqlCheckedListBox.GetItemCheckState(0).ToString() == "Checked") || (sqlCheckedListBox.GetItemCheckState(1).ToString() == "Checked"))
+                if ((sqlChecks_CheckedListBox.GetItemCheckState(0).ToString() == "Checked") || (sqlChecks_CheckedListBox.GetItemCheckState(1).ToString() == "Checked"))
                 {
                     //--------------------------------------------------------------------------------------------------------
-                    if (sqlCheckedListBox.GetItemCheckState(0).ToString() == "Checked")
+                    if (sqlChecks_CheckedListBox.GetItemCheckState(0).ToString() == "Checked")
                     {
                         //begin work on Full SQL Health Check
                         PS_healthCheckScript = @"
@@ -163,17 +152,26 @@ namespace SQLDoctor1
                         psInstance.AddScript(PS_healthCheckScript);
                     }
                     //--------------------------------------------------------------------------------------------------------
-                    else if (sqlCheckedListBox.GetItemCheckState(1).ToString() == "Checked")
+                    else if (sqlChecks_CheckedListBox.GetItemCheckState(1).ToString() == "Checked")
                     {
                         //begin work on SQL Versions Check
-                        PS_sqlVersionScript = @"
+                        PS_sqlVersionScript = $@"
                         Param([Parameter(Mandatory = $true, ValueFromPipeline = $true)][string] $server)
 
-                        Import-Module SQLPS;
+                        Import-Module SQLPS -DisableNameChecking;
 
-                        $sqlVersionQuery = Invoke-Sqlcmd -ServerInstance ""$server"" -Username ""SQLDoctor"" -Password ""SQLDoc"" -Query ""EXEC SQLDoctor.dba.sp_dba_GetServerVersion;""
-                        $sqlVersion = $sqlVersionQuery.ProductVersion.ToString();
+                        $sqlVersionQuery = Invoke-Sqlcmd -ServerInstance ""windows10\sqlexpress"" -Query ""{getSQLVersion}""
+                        $sqlVersion = $sqlVersionQuery | foreach {{$_.Column1}};
                         $sqlVersion;
+                        ";
+
+                        string PS_sqlVersionScript1 = $@"
+                        Param([Parameter(Mandatory = $true, ValueFromPipeline = $true)][string] $server)
+
+                        Import-Module SQLPS -DisableNameChecking;
+
+                        $sqlVersionQuery = Invoke-Sqlcmd -ServerInstance ""$server"" -Query ""{getSQLVersion}""
+                        $sqlVersionQuery;
                         ";
 
                         psInstance.AddScript(PS_sqlVersionScript);
@@ -209,40 +207,16 @@ namespace SQLDoctor1
             }
         }
 
-        private void button2_Click(object sender, EventArgs e)
-        {
-            //Clear all items from ListBox1
-            listBox1.Items.Clear();
-            listBox2.Items.Clear();
-            //listBox3.Items.Clear();
 
-            var sqlInstances = listBox3.Items;
-            foreach (var sqlInstance in sqlInstances)
-            {
-                MessageBox.Show(sqlInstance.ToString());
-            }
+
+        private void clearResults_Button_Click(object sender, EventArgs e)
+        {
+            listbox1.Items.Clear();
+            unvalSQLInst_ListBox.Items.Clear();
+            valSQLInst_ListBox.Items.Clear();
         }
 
 
-//--------------------------------------- MAIN CODE ---------------------------------------------------------//
-        private void richTextBox1_TextChanged(object sender, EventArgs e)
-        {
-        }
-        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-        private void listBox2_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-        private void listBox3_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-        private void sqlCheckedListBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
+        //--------------------------------------- MAIN CODE ---------------------------------------------------------//
     }
 }
