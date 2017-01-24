@@ -36,6 +36,7 @@
             this.Results = new System.Windows.Forms.TabPage();
             this.listBox4 = new System.Windows.Forms.ListBox();
             this.Checks = new System.Windows.Forms.TabPage();
+            this.runSQLChecks_Button = new System.Windows.Forms.Button();
             this.sqlChecks_CheckedListBox = new System.Windows.Forms.CheckedListBox();
             this.Instances = new System.Windows.Forms.TabPage();
             this.moveToSQLChecks_Button = new System.Windows.Forms.Button();
@@ -43,7 +44,7 @@
             this.Servers = new System.Windows.Forms.TabPage();
             this.serverNameList = new System.Windows.Forms.RichTextBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.runSQLChecks_Button = new System.Windows.Forms.Button();
+            this.removeInstance_Button = new System.Windows.Forms.Button();
             this.Results.SuspendLayout();
             this.Checks.SuspendLayout();
             this.Instances.SuspendLayout();
@@ -53,7 +54,7 @@
             // 
             // parseServerNamesButton
             // 
-            this.parseServerNamesButton.Location = new System.Drawing.Point(0, 541);
+            this.parseServerNamesButton.Location = new System.Drawing.Point(0, 264);
             this.parseServerNamesButton.Name = "parseServerNamesButton";
             this.parseServerNamesButton.Size = new System.Drawing.Size(293, 44);
             this.parseServerNamesButton.TabIndex = 4;
@@ -104,7 +105,7 @@
             this.Results.Location = new System.Drawing.Point(4, 22);
             this.Results.Name = "Results";
             this.Results.Padding = new System.Windows.Forms.Padding(3);
-            this.Results.Size = new System.Drawing.Size(297, 585);
+            this.Results.Size = new System.Drawing.Size(296, 585);
             this.Results.TabIndex = 3;
             this.Results.Text = "Results";
             this.Results.UseVisualStyleBackColor = true;
@@ -129,6 +130,16 @@
             this.Checks.Text = "Tasks";
             this.Checks.UseVisualStyleBackColor = true;
             // 
+            // runSQLChecks_Button
+            // 
+            this.runSQLChecks_Button.Location = new System.Drawing.Point(27, 301);
+            this.runSQLChecks_Button.Name = "runSQLChecks_Button";
+            this.runSQLChecks_Button.Size = new System.Drawing.Size(231, 88);
+            this.runSQLChecks_Button.TabIndex = 7;
+            this.runSQLChecks_Button.Text = "Run SQL Checks";
+            this.runSQLChecks_Button.UseVisualStyleBackColor = true;
+            this.runSQLChecks_Button.Click += new System.EventHandler(this.runSQLChecks_Button_Click);
+            // 
             // sqlChecks_CheckedListBox
             // 
             this.sqlChecks_CheckedListBox.FormattingEnabled = true;
@@ -142,6 +153,7 @@
             // 
             // Instances
             // 
+            this.Instances.Controls.Add(this.removeInstance_Button);
             this.Instances.Controls.Add(this.moveToSQLChecks_Button);
             this.Instances.Controls.Add(this.failedToConnectLabel);
             this.Instances.Controls.Add(this.valSQLInst_ListBox);
@@ -156,9 +168,9 @@
             // 
             // moveToSQLChecks_Button
             // 
-            this.moveToSQLChecks_Button.Location = new System.Drawing.Point(54, 324);
+            this.moveToSQLChecks_Button.Location = new System.Drawing.Point(172, 308);
             this.moveToSQLChecks_Button.Name = "moveToSQLChecks_Button";
-            this.moveToSQLChecks_Button.Size = new System.Drawing.Size(192, 38);
+            this.moveToSQLChecks_Button.Size = new System.Drawing.Size(118, 40);
             this.moveToSQLChecks_Button.TabIndex = 9;
             this.moveToSQLChecks_Button.Text = "Move to SQL Checks";
             this.moveToSQLChecks_Button.UseVisualStyleBackColor = true;
@@ -168,9 +180,9 @@
             // 
             this.valSQLInst_ListBox.DisplayMember = "SQLInstance";
             this.valSQLInst_ListBox.FormattingEnabled = true;
-            this.valSQLInst_ListBox.Location = new System.Drawing.Point(0, 3);
+            this.valSQLInst_ListBox.Location = new System.Drawing.Point(0, 0);
             this.valSQLInst_ListBox.Name = "valSQLInst_ListBox";
-            this.valSQLInst_ListBox.Size = new System.Drawing.Size(293, 303);
+            this.valSQLInst_ListBox.Size = new System.Drawing.Size(293, 290);
             this.valSQLInst_ListBox.TabIndex = 0;
             // 
             // Servers
@@ -196,7 +208,7 @@
             this.serverNameList.ForeColor = System.Drawing.SystemColors.MenuText;
             this.serverNameList.Location = new System.Drawing.Point(0, 0);
             this.serverNameList.Name = "serverNameList";
-            this.serverNameList.Size = new System.Drawing.Size(293, 535);
+            this.serverNameList.Size = new System.Drawing.Size(293, 258);
             this.serverNameList.TabIndex = 0;
             this.serverNameList.Text = "localhost";
             // 
@@ -212,15 +224,15 @@
             this.tabControl1.Size = new System.Drawing.Size(304, 611);
             this.tabControl1.TabIndex = 0;
             // 
-            // runSQLChecks_Button
+            // removeInstance_Button
             // 
-            this.runSQLChecks_Button.Location = new System.Drawing.Point(27, 301);
-            this.runSQLChecks_Button.Name = "runSQLChecks_Button";
-            this.runSQLChecks_Button.Size = new System.Drawing.Size(231, 88);
-            this.runSQLChecks_Button.TabIndex = 7;
-            this.runSQLChecks_Button.Text = "Run SQL Checks";
-            this.runSQLChecks_Button.UseVisualStyleBackColor = true;
-            this.runSQLChecks_Button.Click += new System.EventHandler(this.runSQLChecks_Button_Click);
+            this.removeInstance_Button.Location = new System.Drawing.Point(28, 308);
+            this.removeInstance_Button.Name = "removeInstance_Button";
+            this.removeInstance_Button.Size = new System.Drawing.Size(102, 40);
+            this.removeInstance_Button.TabIndex = 7;
+            this.removeInstance_Button.Text = "Remove";
+            this.removeInstance_Button.UseVisualStyleBackColor = true;
+            this.removeInstance_Button.Click += new System.EventHandler(this.removeInstance_Button_Click);
             // 
             // Form1
             // 
@@ -261,6 +273,7 @@
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.Button moveToSQLChecks_Button;
         private System.Windows.Forms.Button runSQLChecks_Button;
+        private System.Windows.Forms.Button removeInstance_Button;
     }
 }
 

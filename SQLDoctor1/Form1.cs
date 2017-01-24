@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using System.Collections.ObjectModel;
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
+using System.Data.SqlClient;
 
 
 namespace SQLDoctor1
@@ -24,12 +25,19 @@ namespace SQLDoctor1
         private void Form1_Load(object sender, EventArgs e)
         {
         }
+
+
+
         //--------------------------------------- MAIN CODE ----------------------------------------------------------//
+
 
 
         private void parseServerNames_Button_Click(object sender, EventArgs e)
         {
+            //Split the server names in the serverNameList box by line
             string[] Servers = serverNameList.Text.Split('\n');
+
+            //foreach 'server' in the serverNameList
             foreach (string Server in Servers)
             {
                 if (String.IsNullOrEmpty(Server))
@@ -37,6 +45,7 @@ namespace SQLDoctor1
                     continue;
                 }
 
+                //Code to be executed by Powershell to retrieve server names
                 string PSScript = @"
                         Param([Parameter(Mandatory = $true, ValueFromPipeline = $true)][string] $server)
 
@@ -119,12 +128,16 @@ namespace SQLDoctor1
         {
             foreach (object Server in valSQLInst_ListBox.Items)
             {
-                sqlChecks(Server.ToString());
+                sqlChecks_C(Server.ToString());
             }
         }
 
+        private void removeInstance_Button_Click(object sender, EventArgs e)
+        {
+            valSQLInst_ListBox.Items.Remove(valSQLInst_ListBox.SelectedItems);
+        }
 
-        private void sqlChecks(string Server)
+        private void sqlChecks_PS(string Server)
         {
             string getSQLVersion = "SELECT @@VERSION;";
 
@@ -205,9 +218,47 @@ namespace SQLDoctor1
                 }
                 //--------------------------------------------------------------------------------------------------------
             }
+        } //Replaced by sqlChecks_C - This uses built in C# SQLData functions instead of PowerShell
+
+        private void sqlChecks_C(string Server)
+        {
+
+            string getSQLVersion = "SELECT @@VERSION;";
+
+            //Set up the SQL Server Connection String
+            using (SqlConnection sqlConn = new SqlConnection($"Data Source={Server}; Initial Catalog=master; Integrated Security=True; Connection Timeout=15"))
+            {
+                //If HealthCheck or SQL Version option has been selected, then continue
+                if ((sqlChecks_CheckedListBox.GetItemCheckState(0).ToString() == "Checked") || (sqlChecks_CheckedListBox.GetItemCheckState(1).ToString() == "Checked"))
+                {
+                    //If HealthCheck is selected, continue
+                    if (sqlChecks_CheckedListBox.GetItemCheckState(0).ToString() == "Checked")
+                    {
+                        //Set up the SQL Command to be executed using the sqlConn connection string
+                        using (SqlCommand sqlCmd = new SqlCommand(getSQLVersion, sqlConn))
+                        {
+                            //Try and open the sqlConnection
+                            try
+                            {
+                                sqlConn.Open();
+                                using (SqlDataReader rdr = sqlCmd.ExecuteReader())
+                                {
+                                    while (rdr.Read())
+                                    {
+                                        string version = (string)rdr[""];
+                                        MessageBox.Show(version);
+                                    }
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show(ex.ToString());
+                            }
+                        }
+                    }
+                }
+            }
         }
-
-
 
         private void clearResults_Button_Click(object sender, EventArgs e)
         {
@@ -215,6 +266,8 @@ namespace SQLDoctor1
             unvalSQLInst_ListBox.Items.Clear();
             valSQLInst_ListBox.Items.Clear();
         }
+
+
 
 
         //--------------------------------------- MAIN CODE ---------------------------------------------------------//
