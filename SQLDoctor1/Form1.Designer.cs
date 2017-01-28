@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.parseServerNamesButton = new System.Windows.Forms.Button();
-            this.listbox1 = new System.Windows.Forms.ListBox();
+            this.progressListBox = new System.Windows.Forms.ListBox();
             this.clearResults_Button = new System.Windows.Forms.Button();
             this.unvalSQLInst_ListBox = new System.Windows.Forms.ListBox();
             this.failedToConnectLabel = new System.Windows.Forms.Label();
@@ -39,12 +39,12 @@
             this.runSQLChecks_Button = new System.Windows.Forms.Button();
             this.sqlChecks_CheckedListBox = new System.Windows.Forms.CheckedListBox();
             this.Instances = new System.Windows.Forms.TabPage();
+            this.removeInstance_Button = new System.Windows.Forms.Button();
             this.moveToSQLChecks_Button = new System.Windows.Forms.Button();
             this.valSQLInst_ListBox = new System.Windows.Forms.ListBox();
             this.Servers = new System.Windows.Forms.TabPage();
             this.serverNameList = new System.Windows.Forms.RichTextBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.removeInstance_Button = new System.Windows.Forms.Button();
             this.Results.SuspendLayout();
             this.Checks.SuspendLayout();
             this.Instances.SuspendLayout();
@@ -62,13 +62,13 @@
             this.parseServerNamesButton.UseVisualStyleBackColor = true;
             this.parseServerNamesButton.Click += new System.EventHandler(this.parseServerNames_Button_Click);
             // 
-            // listbox1
+            // progressListBox
             // 
-            this.listbox1.FormattingEnabled = true;
-            this.listbox1.Location = new System.Drawing.Point(349, 44);
-            this.listbox1.Name = "listbox1";
-            this.listbox1.Size = new System.Drawing.Size(618, 537);
-            this.listbox1.TabIndex = 5;
+            this.progressListBox.FormattingEnabled = true;
+            this.progressListBox.Location = new System.Drawing.Point(349, 44);
+            this.progressListBox.Name = "progressListBox";
+            this.progressListBox.Size = new System.Drawing.Size(618, 537);
+            this.progressListBox.TabIndex = 5;
             // 
             // clearResults_Button
             // 
@@ -166,6 +166,16 @@
             this.Instances.Text = "Instances";
             this.Instances.UseVisualStyleBackColor = true;
             // 
+            // removeInstance_Button
+            // 
+            this.removeInstance_Button.Location = new System.Drawing.Point(28, 308);
+            this.removeInstance_Button.Name = "removeInstance_Button";
+            this.removeInstance_Button.Size = new System.Drawing.Size(102, 40);
+            this.removeInstance_Button.TabIndex = 7;
+            this.removeInstance_Button.Text = "Remove";
+            this.removeInstance_Button.UseVisualStyleBackColor = true;
+            this.removeInstance_Button.Click += new System.EventHandler(this.removeInstance_Button_Click);
+            // 
             // moveToSQLChecks_Button
             // 
             this.moveToSQLChecks_Button.Location = new System.Drawing.Point(172, 308);
@@ -224,16 +234,6 @@
             this.tabControl1.Size = new System.Drawing.Size(304, 611);
             this.tabControl1.TabIndex = 0;
             // 
-            // removeInstance_Button
-            // 
-            this.removeInstance_Button.Location = new System.Drawing.Point(28, 308);
-            this.removeInstance_Button.Name = "removeInstance_Button";
-            this.removeInstance_Button.Size = new System.Drawing.Size(102, 40);
-            this.removeInstance_Button.TabIndex = 7;
-            this.removeInstance_Button.Text = "Remove";
-            this.removeInstance_Button.UseVisualStyleBackColor = true;
-            this.removeInstance_Button.Click += new System.EventHandler(this.removeInstance_Button_Click);
-            // 
             // Form1
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
@@ -241,7 +241,7 @@
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(987, 646);
             this.Controls.Add(this.clearResults_Button);
-            this.Controls.Add(this.listbox1);
+            this.Controls.Add(this.progressListBox);
             this.Controls.Add(this.tabControl1);
             this.Name = "Form1";
             this.Text = "Form1";
@@ -258,7 +258,7 @@
 
         #endregion
         private System.Windows.Forms.Button parseServerNamesButton;
-        private System.Windows.Forms.ListBox listbox1;
+        private System.Windows.Forms.ListBox progressListBox;
         private System.Windows.Forms.Button clearResults_Button;
         private System.Windows.Forms.ListBox unvalSQLInst_ListBox;
         private System.Windows.Forms.Label failedToConnectLabel;

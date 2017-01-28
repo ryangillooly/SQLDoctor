@@ -220,14 +220,23 @@ namespace SQLDoctor1
             }
         } //Replaced by sqlChecks_C - This uses built in C# SQLData functions instead of PowerShell
 
+        private void sqlConn_InfoMessage(object sender, SqlInfoMessageEventArgs e)
+        {
+            string myMsg = e.Message;
+            progressListBox.Items.Add(myMsg);
+        }
+
         private void sqlChecks_C(string Server)
         {
 
-            string getSQLVersion = "SELECT @@VERSION;";
+            string getSQLVersion = @"SELECT @@Version";
 
             //Set up the SQL Server Connection String
             using (SqlConnection sqlConn = new SqlConnection($"Data Source={Server}; Initial Catalog=master; Integrated Security=True; Connection Timeout=15"))
             {
+                //This will send any "Messages" returned by SQL to the "sqlConn_InfoMessage" method
+                sqlConn.InfoMessage += new SqlInfoMessageEventHandler(sqlConn_InfoMessage);
+
                 //If HealthCheck or SQL Version option has been selected, then continue
                 if ((sqlChecks_CheckedListBox.GetItemCheckState(0).ToString() == "Checked") || (sqlChecks_CheckedListBox.GetItemCheckState(1).ToString() == "Checked"))
                 {
@@ -243,6 +252,7 @@ namespace SQLDoctor1
                                 sqlConn.Open();
                                 using (SqlDataReader rdr = sqlCmd.ExecuteReader())
                                 {
+                                    //This will read the SQL Resultset, NOT the Messages
                                     while (rdr.Read())
                                     {
                                         string version = (string)rdr[""];
@@ -262,7 +272,7 @@ namespace SQLDoctor1
 
         private void clearResults_Button_Click(object sender, EventArgs e)
         {
-            listbox1.Items.Clear();
+            progressListBox.Items.Clear();
             unvalSQLInst_ListBox.Items.Clear();
             valSQLInst_ListBox.Items.Clear();
         }
