@@ -28,13 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.parseServerNamesButton = new System.Windows.Forms.Button();
             this.progressListBox = new System.Windows.Forms.ListBox();
             this.clearResults_Button = new System.Windows.Forms.Button();
             this.unvalSQLInst_ListBox = new System.Windows.Forms.ListBox();
             this.failedToConnectLabel = new System.Windows.Forms.Label();
             this.Results = new System.Windows.Forms.TabPage();
-            this.listBox4 = new System.Windows.Forms.ListBox();
             this.Checks = new System.Windows.Forms.TabPage();
             this.runSQLChecks_Button = new System.Windows.Forms.Button();
             this.sqlChecks_CheckedListBox = new System.Windows.Forms.CheckedListBox();
@@ -45,11 +45,20 @@
             this.Servers = new System.Windows.Forms.TabPage();
             this.serverNameList = new System.Windows.Forms.RichTextBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.inventoryDataSet = new SQLDoctor1.InventoryDataSet();
+            this.instancesBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.instancesTableAdapter = new SQLDoctor1.InventoryDataSetTableAdapters.InstancesTableAdapter();
+            this.Instance = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Score = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Results.SuspendLayout();
             this.Checks.SuspendLayout();
             this.Instances.SuspendLayout();
             this.Servers.SuspendLayout();
             this.tabControl1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.inventoryDataSet)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.instancesBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // parseServerNamesButton
@@ -101,7 +110,7 @@
             // 
             // Results
             // 
-            this.Results.Controls.Add(this.listBox4);
+            this.Results.Controls.Add(this.dataGridView1);
             this.Results.Location = new System.Drawing.Point(4, 22);
             this.Results.Name = "Results";
             this.Results.Padding = new System.Windows.Forms.Padding(3);
@@ -109,14 +118,6 @@
             this.Results.TabIndex = 3;
             this.Results.Text = "Results";
             this.Results.UseVisualStyleBackColor = true;
-            // 
-            // listBox4
-            // 
-            this.listBox4.FormattingEnabled = true;
-            this.listBox4.Location = new System.Drawing.Point(0, 0);
-            this.listBox4.Name = "listBox4";
-            this.listBox4.Size = new System.Drawing.Size(300, 407);
-            this.listBox4.TabIndex = 0;
             // 
             // Checks
             // 
@@ -234,6 +235,44 @@
             this.tabControl1.Size = new System.Drawing.Size(304, 611);
             this.tabControl1.TabIndex = 0;
             // 
+            // dataGridView1
+            // 
+            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Instance,
+            this.Score});
+            this.dataGridView1.Location = new System.Drawing.Point(0, 0);
+            this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.Size = new System.Drawing.Size(296, 288);
+            this.dataGridView1.TabIndex = 0;
+            this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
+            // 
+            // inventoryDataSet
+            // 
+            this.inventoryDataSet.DataSetName = "InventoryDataSet";
+            this.inventoryDataSet.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
+            // 
+            // instancesBindingSource
+            // 
+            this.instancesBindingSource.DataMember = "Instances";
+            this.instancesBindingSource.DataSource = this.inventoryDataSet;
+            // 
+            // instancesTableAdapter
+            // 
+            this.instancesTableAdapter.ClearBeforeFill = true;
+            // 
+            // Instance
+            // 
+            this.Instance.HeaderText = "Instance";
+            this.Instance.Name = "Instance";
+            this.Instance.ReadOnly = true;
+            // 
+            // Score
+            // 
+            this.Score.HeaderText = "Score";
+            this.Score.Name = "Score";
+            this.Score.ReadOnly = true;
+            // 
             // Form1
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
@@ -252,6 +291,9 @@
             this.Instances.PerformLayout();
             this.Servers.ResumeLayout(false);
             this.tabControl1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.inventoryDataSet)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.instancesBindingSource)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -263,7 +305,6 @@
         private System.Windows.Forms.ListBox unvalSQLInst_ListBox;
         private System.Windows.Forms.Label failedToConnectLabel;
         private System.Windows.Forms.TabPage Results;
-        private System.Windows.Forms.ListBox listBox4;
         private System.Windows.Forms.TabPage Checks;
         private System.Windows.Forms.CheckedListBox sqlChecks_CheckedListBox;
         private System.Windows.Forms.TabPage Instances;
@@ -274,6 +315,12 @@
         private System.Windows.Forms.Button moveToSQLChecks_Button;
         private System.Windows.Forms.Button runSQLChecks_Button;
         private System.Windows.Forms.Button removeInstance_Button;
+        private System.Windows.Forms.DataGridView dataGridView1;
+        private InventoryDataSet inventoryDataSet;
+        private System.Windows.Forms.BindingSource instancesBindingSource;
+        private InventoryDataSetTableAdapters.InstancesTableAdapter instancesTableAdapter;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Instance;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Score;
     }
 }
 

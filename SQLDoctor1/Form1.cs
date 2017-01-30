@@ -24,6 +24,8 @@ namespace SQLDoctor1
         }
         private void Form1_Load(object sender, EventArgs e)
         {
+            // TODO: This line of code loads data into the 'inventoryDataSet.Instances' table. You can move, or remove it, as needed.
+            //this.instancesTableAdapter.Fill(this.inventoryDataSet.Instances);
         }
 
 
@@ -220,28 +222,71 @@ namespace SQLDoctor1
             }
         } //Replaced by sqlChecks_C - This uses built in C# SQLData functions instead of PowerShell
 
-        private void sqlConn_InfoMessage(object sender, SqlInfoMessageEventArgs e)
+        private void sqlConn_InfoMessage(object sender, SqlInfoMessageEventArgs e, string Server)
         {
             string myMsg = e.Message;
             progressListBox.Items.Add(myMsg);
+
+            DataGridViewRow row = (DataGridViewRow)dataGridView1.Rows[0].Clone();
+            row.Cells[0].Value = Server;
+            //row.Cells[1].Value = HealthCheckScore;
+            dataGridView1.Rows.Add(row);
         }
 
         private void sqlChecks_C(string Server)
         {
 
-            string getSQLVersion = @"SELECT @@Version";
+            string getSQLVersion = "SELECT @@Version";
+            string sqlHealthCheck = @"
+print 'd'
+
+                                     ";
+
+
 
             //Set up the SQL Server Connection String
             using (SqlConnection sqlConn = new SqlConnection($"Data Source={Server}; Initial Catalog=master; Integrated Security=True; Connection Timeout=15"))
             {
                 //This will send any "Messages" returned by SQL to the "sqlConn_InfoMessage" method
-                sqlConn.InfoMessage += new SqlInfoMessageEventHandler(sqlConn_InfoMessage);
+                sqlConn.InfoMessage += new SqlInfoMessageEventHandler(sqlConn_InfoMessage(Server));
 
                 //If HealthCheck or SQL Version option has been selected, then continue
                 if ((sqlChecks_CheckedListBox.GetItemCheckState(0).ToString() == "Checked") || (sqlChecks_CheckedListBox.GetItemCheckState(1).ToString() == "Checked"))
                 {
+
+
                     //If HealthCheck is selected, continue
                     if (sqlChecks_CheckedListBox.GetItemCheckState(0).ToString() == "Checked")
+                    {
+                        //Set up the SQL Command to be executed using the sqlConn connection string
+                        using (SqlCommand sqlCmd = new SqlCommand(sqlHealthCheck, sqlConn))
+                        {
+                            //Try and open the sqlConnection
+                            try
+                            {
+                                sqlConn.Open();
+                                
+                                using (SqlDataReader rdr = sqlCmd.ExecuteReader())
+                                {
+                                    //This will read the SQL Resultset, NOT the Messages
+                                    while (rdr.Read())
+                                    {
+                                        string HealthCheck = (string)rdr[""];
+                                        MessageBox.Show(HealthCheck);
+                                    }
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show(ex.ToString());
+                            }
+                        }
+                    }
+
+
+
+                    //If SQL Version is Selected
+                    if (sqlChecks_CheckedListBox.GetItemCheckState(1).ToString() == "Checked")
                     {
                         //Set up the SQL Command to be executed using the sqlConn connection string
                         using (SqlCommand sqlCmd = new SqlCommand(getSQLVersion, sqlConn))
@@ -266,6 +311,9 @@ namespace SQLDoctor1
                             }
                         }
                     }
+
+
+
                 }
             }
         }
@@ -275,6 +323,11 @@ namespace SQLDoctor1
             progressListBox.Items.Clear();
             unvalSQLInst_ListBox.Items.Clear();
             valSQLInst_ListBox.Items.Clear();
+        }
+
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
         }
 
 
